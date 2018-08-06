@@ -1,0 +1,30 @@
+#!/bin/bash
+
+dir=include
+
+# echo pwd  `pwd`
+
+#------------------------------------------------------------------------------
+# 'muminuseplus' and its subpackages, excluding Stntuple
+#------------------------------------------------------------------------------
+if [ ! -d ../$dir/muminuseplus ] ; then mkdir -p ../$dir/muminuseplus ; fi
+
+for d in ana mod plot; do
+    if [ ! -e ../$dir/muminuseplus/$d ] ; then 
+	echo `pwd`$0 : creating symbolic link ../$dir/muminuseplus/$d
+	ln -s ../../muminuseplus/$d/$d ../$dir/muminuseplus/$d
+    fi
+done
+
+#------------------------------------------------------------------------------
+# muminuseplus/Stntuple and its subpackages
+#------------------------------------------------------------------------------
+# if [ ! -d ../$dir/Stntuple ] ; then mkdir -p ../$dir/Stntuple ; fi
+# 
+# # for d in alg base gui loop mod obj val ; do
+# for d in alg base loop mod obj val ; do
+#     if [ ! -e ../$dir/Stntuple/$d ] ; then 
+# 	echo `pwd`$0 : creating symbolic link ../$dir/Stntuple/$d
+# 	ln -s ../../muminuseplus/Stntuple/$d/$d ../$dir/Stntuple/$d
+#     fi
+# done

@@ -1,0 +1,84 @@
+# -*- mode:tcl -*-
+#------------------------------------------------------------------------------
+# generate 100 MeV/c positrons
+#------------------------------------------------------------------------------
+#include "fcl/minimalMessageService.fcl"
+#include "fcl/standardProducers.fcl"
+#include "fcl/standardServices.fcl"
+
+#include "muminuseplus/jobConfig/prolog.fcl"
+
+process_name : EPlusGun
+
+source       : { module_type : EmptyEvent   }
+
+# services : @local::Services.Reco
+services : {
+    message               : @local::default_message
+    TFileService          : { fileName : "nts.muminus_eplus.jobtype.offver.sequencer.root" }
+    RandomNumberGenerator : { }
+
+    GeometryService        : { inputFile      : "JobConfig/common/geom_baseline.txt"      }
+    ConditionsService      : { conditionsfile : "Mu2eG4/test/conditions_01.txt"        }
+    GlobalConstantsService : { inputFile      : "Mu2eG4/test/globalConstants_01.txt"   }
+    BTrkHelper             : @local::BTrkHelperDefault
+    G4Helper               : { }
+    SeedService            : { @table::automaticSeeds
+	baseSeed         :  0
+	maxUniqueEngines :  20
+    }
+
+    TimeTracker : {
+	printSummary : true
+	dbOutput : {
+	    filename  : ""
+	    overwrite : false
+	}
+    }
+}
+services.scheduler.wantSummary: true
+
+producers    : { @table::muminuseplus.producers }
+filters      : { @table::muminuseplus.filters   }
+outputs      : { @table::muminuseplus.outputs   }
+paths        : { @table::muminuseplus.paths     }
+
+physics : {
+    producers: { @table::producers 
+	generate                 : { @table::producers.egun 
+	    physics : { @table::producers.egun.physics
+		pdgId  : -11
+	    }
+	}
+    }
+    
+    filters  : { @table::filters }
+
+    @table::paths
+
+    trigger_paths : [ path_gen_digi_reco ]
+    out           : [     ]
+    end_paths     : [ out ]
+}
+
+services.TFileService.fileName            : "nts.user.egun_eplus_genReco.xxx.000001.root"
+#------------------------------------------------------------------------------
+# uncomment the next 2 lines if you want the DST file to be written out
+#-----------------------------------------------------------------------------
+# physics.out                               : [ detectorOutput ]
+# outputs.detectorOutput.SelectEvents       : [ path_gen_digi_reco_stn_tcm_dep ]
+outputs.detectorOutput.fileName           : "sim.user.egun_eplus_genReco.xxx.000001.art"
+#------------------------------------------------------------------------------
+# uncomment to avoid waisting time on the initialization of detailed neutron 
+# cross sections - that shouldn't affect the CE simulation 
+#------------------------------------------------------------------------------
+# physics.producers.g4run.physics.physicsListName : "QGSP_BERT"
+#------------------------------------------------------------------------------
+# debugging
+#------------------------------------------------------------------------------
+# physics.producers.CalPatRecDem.diagLevel : 1
+# physics.producers.CalPatRecDmm.diagLevel : 1
+# physics.producers.AvikPID.debugLevel     : 100
+#------------------------------------------------------------------------------
+# everything below is appended by murat/scripts/submit_mu2e_job
+#------------------------------------------------------------------------------
