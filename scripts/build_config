@@ -7,6 +7,8 @@ dir=include
 #------------------------------------------------------------------------------
 # 'muminus_eplus' and its subpackages, excluding Stntuple
 #------------------------------------------------------------------------------
+if [ -d $MU2E_BASE_RELEASE/Stntuple ] ; then 
+ 
 if [ ! -d ../$dir/muminus_eplus ] ; then mkdir -p ../$dir/muminus_eplus ; fi
 
 for d in ana mod plot; do
@@ -16,6 +18,7 @@ for d in ana mod plot; do
     fi
 done
 
+fi
 #------------------------------------------------------------------------------
 # muminus_eplus/Stntuple and its subpackages
 #------------------------------------------------------------------------------
