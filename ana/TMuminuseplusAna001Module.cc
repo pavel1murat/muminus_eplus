@@ -1127,14 +1127,14 @@ int TMuminuseplusAna001Module::BeginJob() {
 //-----------------------------------------------------------------------------
 // register data blocks
 //-----------------------------------------------------------------------------
-  RegisterDataBlock("TprTimeClusterBlock","TStnTimeClusterBlock" ,&fTimeClusterBlock );
-  RegisterDataBlock("TprTrackSeedBlock","TStnTrackSeedBlock"     ,&fTprTrackSeedBlock);
-  RegisterDataBlock("TprHelixBlock"    ,"TStnHelixBlock"    ,&fTprHelixBlock    );
-  RegisterDataBlock("TprTrackBlock"    ,"TStnTrackBlock"         ,&fTprTrackBlock    );
-  RegisterDataBlock("StrawDataBlock"   ,"TStrawDataBlock"        ,&fStrawDataBlock   );
-  RegisterDataBlock("GenpBlock"        ,"TGenpBlock"             ,&fGenpBlock        );
-  RegisterDataBlock("SimpBlock"        ,"TSimpBlock"             ,&fSimpBlock        );
-  RegisterDataBlock("VdetBlock"        ,"TVdetDataBlock"         ,&fVdetDataBlock    );
+  RegisterDataBlock("TimeClusterBlockTpr","TStnTimeClusterBlock"   ,&fTimeClusterBlock );
+  RegisterDataBlock("TrackSeedBlockTpr"  ,"TStnTrackSeedBlock"     ,&fTprTrackSeedBlock);
+  RegisterDataBlock("HelixBlockTpr"      ,"TStnHelixBlock"         ,&fTprHelixBlock    );
+  RegisterDataBlock("TrackBlock"         ,"TStnTrackBlock"         ,&fTprTrackBlock    );
+  RegisterDataBlock("StrawDataBlock"     ,"TStrawDataBlock"        ,&fStrawDataBlock   );
+  RegisterDataBlock("GenpBlock"          ,"TGenpBlock"             ,&fGenpBlock        );
+  RegisterDataBlock("SimpBlock"          ,"TSimpBlock"             ,&fSimpBlock        );
+  RegisterDataBlock("VdetBlock"          ,"TVdetDataBlock"         ,&fVdetDataBlock    );
 
 //-----------------------------------------------------------------------------
 // book histograms
