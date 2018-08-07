@@ -1,0 +1,145 @@
+# -*- mode: tcl -*-
+#include "fcl/standardServices.fcl"
+#include "fcl/standardProducers.fcl"
+#include "TrkFilters/fcl/prolog.fcl"
+#include "muminus_eplus/jobConfig/prolog.fcl"
+#include "Stntuple/fcl/prolog.fcl"
+
+BEGIN_PROLOG
+
+#------------------------------------------------------------------------------
+# namespace
+#------------------------------------------------------------------------------
+muminus_eplus : { @table::muminus_eplus
+    producers : { @table::muminus_eplus.producers }  
+
+    filters   : { @table::muminus_eplus.filters
+	@table::Stntuple.filters
+	
+	StntupleMakerCprDep  : { @table::StntupleMakerTemplate 
+	    makePid                   : 1
+	    makeTrackSeeds            : 1
+	    makeTimeClusters          : 1
+	    makeHelices               : 1
+	    timeClusterBlockName      : [ "CprTimeClusterBlock"         ]
+	    timeClusterModuleLabel    : [ "CalTimePeakFinder"           ]
+	    helixBlockName            : [ "CprHelixBlockDep"            ]
+	    helixModuleLabel          : [ "CalHelixFinderDep"           ]
+	    trackSeedBlockName        : [ "CprTrackSeedBlockDep"        ]
+	    trackSeedModuleLabel      : [ "CalSeedFitDep"               ]
+	    shortHelixBlockName       : [ "ShortCprHelixBlockDep"       ]
+	    shortHelixModuleLabel     : [ "CalSeedFitDep"               ]
+	    shortTrackSeedBlockName   : [ "ShortCprTrackSeedBlockDep"   ]
+	    shortTrackSeedModuleLabel : [ "MergePatRecCprDep"           ]   
+	    trackBlockName            : [ "TrackBlockCprDep"            ] 
+	    trackStrawHitBlockName    : [ "TrackHitBlockCprDep"         ] 
+	    trkRecoModuleLabel        : [ "MergePatRecCprDep"           ]
+	    trkExtrapolModuleLabel    : [ "TrackCaloIntersectionCprDep" ]
+	    trkCaloMatchModuleLabel   : [ "TrackCaloMatchingCprDep"     ]
+	    pidBlockName              : [ "PidBlockCprDep"              ] 
+	    pidModuleLabel            : [ "AvikPIDNewCprDep"            ]
+	    fitParticle               : [                        -11 ]
+	    fitDirection              : [                          0 ]
+	}
+	
+	StntupleMakerTprDep  : { @table::StntupleMakerTemplate 
+	    makePid                   : 1
+	    makeTrackSeeds            : 1
+	    makeTimeClusters          : 1
+	    makeHelices               : 1
+	    timeClusterBlockName      : [ "TimeClusterBlockTpr"         ]
+	    timeClusterModuleLabel    : [ "TimeClusterFinder"           ]
+	    helixBlockName            : [ "HelixBlockTpr"               ]
+	    helixModuleLabel          : [ "HelixFinder:Negative"        ]
+	    trackSeedBlockName        : [ "TrackSeedBlockTpr"           ]
+	    trackSeedModuleLabel      : [ "KSFDeP"                      ]
+	    shortHelixBlockName       : [ "ShortHelixBlockTpr"          ]
+	    shortHelixModuleLabel     : [ "KSFDeP"                      ]
+	    shortTrackSeedBlockName   : [ "ShortCprTrackSeedBlockDep"   ]
+	    shortTrackSeedModuleLabel : [ "MergePatRecTprDep"           ]   
+	    trackBlockName            : [ "TrackBlockTprDep"            ] 
+	    trackStrawHitBlockName    : [ "TrackHitBlockTprDep"         ] 
+	    trkRecoModuleLabel        : [ "MergePatRecTprDep"           ]
+	    trkExtrapolModuleLabel    : [ "TrackCaloIntersectionTprDep" ]
+	    trkCaloMatchModuleLabel   : [ "TrackCaloMatchingTprDep"     ]
+	    pidBlockName              : [ "PidBlockTprDep"              ] 
+	    pidModuleLabel            : [ "AvikPIDNewTprDep"            ]
+	    fitParticle               : [                        -11 ]
+	    fitDirection              : [                          0 ]
+	}
+	
+	TTStntupleMakerTprDep  : { @table::StntupleMakerTemplate 
+	    makePid                   : 1
+	    makeTrackSeeds            : 1
+	    makeTimeClusters          : 1
+	    makeHelices               : 1
+	    timeClusterBlockName      : [ "TimeClusterBlockTpr"         ]
+	    timeClusterModuleLabel    : [ "TTtimeClusterFinder"         ]
+	    helixBlockName            : [ "HelixBlockTpr"               ]
+	    helixModuleLabel          : [ "TThelixFinder:Negative"      ]
+	    trackSeedBlockName        : [ "TrackSeedBlockTpr"           ]
+	    trackSeedModuleLabel      : [ "TTKSFDeP"                    ]
+	    shortHelixBlockName       : [ "ShortHelixBlockTpr"          ]
+	    shortHelixModuleLabel     : [ "TTKSFDeP"                    ]
+	    shortTrackSeedBlockName   : [ "ShortCprTrackSeedBlockDep"   ]
+	    shortTrackSeedModuleLabel : [ "TTMergePatRecTprDep"           ]   
+	    trackBlockName            : [ "TrackBlockTprDep"            ] 
+	    trackStrawHitBlockName    : [ "TrackHitBlockTprDep"         ] 
+	    trkRecoModuleLabel        : [ "TTMergePatRecTprDep"           ]
+	    trkExtrapolModuleLabel    : [ "TTTrackCaloIntersectionTprDep" ]
+	    trkCaloMatchModuleLabel   : [ "TrackCaloMatchingTprDep"     ]
+	    pidBlockName              : [ "PidBlockTprDep"              ] 
+	    pidModuleLabel            : [ "TTAvikPIDNewTprDep"          ]
+	    fitParticle               : [                        -11 ]
+	    fitDirection              : [                          0 ]
+	}
+    }
+
+
+}
+
+
+muminus_eplus.stnmaker_cpr_dep : [ InitStntuple, StntupleMakerCprDep,  FillStntuple ]
+
+muminus_eplus.stnmaker_tpr_dep : [ InitStntuple, StntupleMakerTprDep,  FillStntuple ]
+
+muminus_eplus.stnmaker_trigger_tpr_dep : [ InitStntuple, TTStntupleMakerTprDep,  FillStntuple ]
+
+muminus_eplus.paths : { @table::muminus_eplus.paths
+    
+    path_gen_digi_reco_stnmaker     : [ @sequence::muminus_eplus.gen,
+					@sequence::muminus_eplus.reco,
+					@sequence::Stntuple.stnmaker_tcm_dep]
+    
+    path_reco_stnmaker              : [ @sequence::muminus_eplus.reco,
+					@sequence::Stntuple.stnmaker_tcm_dep ]
+    
+    path_tpr_reco_stnmaker          : [ @sequence::muminus_eplus.tpr_reco,
+					@sequence::muminus_eplus.stnmaker_tpr_dep]
+    
+    path_cpr_reco_stnmaker          : [ @sequence::muminus_eplus.cpr_reco,
+					@sequence::muminus_eplus.stnmaker_cpr_dep ]
+    
+    path_gen_digi_tpr_reco_stnmaker : [ @sequence::muminus_eplus.gen,
+					@sequence::muminus_eplus.tpr_reco,
+					@sequence::muminus_eplus.stnmaker_tpr_dep ]
+    
+    path_gen_digi_cpr_reco_stnmaker : [ @sequence::muminus_eplus.gen,
+					@sequence::muminus_eplus.cpr_reco,
+					@sequence::muminus_eplus.stnmaker_cpr_dep ]
+    
+    
+
+    #trigger sequences for the calorimeter-seeded track reconstruction algorithm
+    # path_gen_digi_cpr_trigger_reco_stnmaker : [ @sequence::muminus_eplus.gen,
+    # 						@sequence::muminus_eplus.cpr_trigger_reco,
+    # 						@sequence::muminus_eplus.stnmaker_cpr_dep
+    # 					       ]
+    
+    # path_trigger_cpr_reco_stnmaker          : [ @sequence::muminus_eplus.cpr_trigger_reco,
+    # 						@sequence::muminus_eplus.stnmaker_cpr_dep ]
+    
+}
+
+
+END_PROLOG

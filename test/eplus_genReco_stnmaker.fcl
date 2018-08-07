@@ -6,16 +6,16 @@
 #include "fcl/standardProducers.fcl"
 #include "fcl/standardServices.fcl"
 
-#include "muminus_eplus/jobConfig/prolog.fcl"
+#include "muminus_eplus/jobConfig/prolog_stntuple.fcl"
 
-process_name : EPlusGun
+process_name : EPlusGunStnmaker
 
 source       : { module_type : EmptyEvent   }
 
 # services : @local::Services.Reco
 services : {
     message               : @local::default_message
-    TFileService          : { fileName : "nts.muminus_eplus.jobtype.offver.sequencer.root" }
+    TFileService          : { fileName : "nts.muminus_eplus_stnmaker.jobtype.offver.sequencer.root" }
     RandomNumberGenerator : { }
 
     GeometryService        : { inputFile      : "JobConfig/common/geom_baseline.txt"      }
@@ -46,20 +46,21 @@ paths        : { @table::muminus_eplus.paths     }
 physics : {
     producers: { @table::producers }
     
-    filters  : { @table::filters }
+    filters  : { @table::filters 
+	InitStntuple : { @table::filters.InitStntuple histFileName : "nts.user.eplus_genReco_stnmaker.xxx.000001.stn" }
+    }
 
     @table::paths
 
-    trigger_paths : [ path_gen_digi_reco ]
-#    trigger_paths : [ path_gen_digi ]    
-    out           : [  ]
+    trigger_paths : [ path_gen_digi_reco_stnmaker ]
+    out           : [     ]
     end_paths     : [ out ]
 }
 
-services.TFileService.fileName            : "nts.user.egun_eplus_genReco.xxx.000001.root"
+services.TFileService.fileName            : "nts.user.egun_eplus_genReco_stnmaker.xxx.000001.root"
 #------------------------------------------------------------------------------
 # uncomment the next 2 lines if you want the DST file to be written out
 #-----------------------------------------------------------------------------
-physics.out                               : [ detectorOutput ]
-outputs.detectorOutput.SelectEvents       : [ path_gen_digi_reco ]
-outputs.detectorOutput.fileName           : "sim.user.egun_eplus_genReco.xxx.000001.art"
+# physics.out                               : [ detectorOutput ]
+# outputs.detectorOutput.SelectEvents       : [ path_gen_digi_reco ]
+outputs.detectorOutput.fileName           : "sim.user.egun_eplus_genReco_stnmaker.xxx.000001.art"

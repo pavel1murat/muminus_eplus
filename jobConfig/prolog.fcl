@@ -2,19 +2,21 @@
 #include "fcl/standardServices.fcl"
 #include "fcl/standardProducers.fcl"
 #include "TrkFilters/fcl/prolog.fcl"
+#include "TrkDiag/fcl/prolog.fcl"
 
 BEGIN_PROLOG
 
 #------------------------------------------------------------------------------
 # namespace
 #------------------------------------------------------------------------------
-muminuseplus : {
+muminus_eplus : {
     producers : {
 	@table::EventGenerator.producers  # defined in EventGenerator
-	@table::CommonMC.producers    # FIXME
+	@table::CommonMC.producers        # FIXME
 	@table::TrackerMC.producers       # defined in TrackerMC
 	@table::TrkHitReco.producers      # defined in TrkHitReco
 	@table::Tracking.producers        # defined in TrkPatRec
+	@table::Tracking.TrkTrigger.producers        # defined in TrkPatRec
 	@table::CaloDigiMC.producers      # defined in CaloDigiMC
 	@table::CaloDigiMC.producersMC    # defined in CaloDigiMC
 	@table::CaloReco.producers        # defined in CaloReco
@@ -25,7 +27,26 @@ muminuseplus : {
 	@table::TrackCaloMatching.producers
 	@table::ParticleID.producers
 	
+	generate    : { @table::EventGenerator.producers.egun 
+	    physics : { @table::EventGenerator.producers.egun.physics
+		pdgId  : -11
+	    }
+	}
 	g4run                : { @table::Mu2eG4.producers.g4run   }
+
+	#set a lower threshold to the calo-clustering module used by the calo-seeded track search
+	@table::CaloClusterFast.producers # defined in CaloCluster
+
+	CaloClusterFast      : { @table::CaloClusterFast.producers.CaloClusterFast
+	    minEnergy           : 40. #OPTIMIZE ME!
+	}
+	
+
+	AvikPIDNewCprDep   : { @table::ParticleID.templates.AvikPIDNew  trkRecModuleLabel : MergePatRecCprDep }
+	AvikPIDNewTprDep   : { @table::ParticleID.templates.AvikPIDNew  trkRecModuleLabel : MergePatRecTprDep }
+#	TTAvikPIDNewTprDep : { @table::ParticleID.templates.AvikPIDNew  trkRecModuleLabel : TTMergePatRecTprDep }
+	
+	
     }  
 
     filters   : {
@@ -33,6 +54,40 @@ muminuseplus : {
 	
 	@table::CalPatRec.filters
 	@table::TrkTrigger.Filters
+	
+	# CalTimePeakFinder  : { @table::CalPatRec.filters.CalTimePeakFinder
+	#     minClusterEnergy    : 40. #MeV NEED OPTIMIZATION
+	# }
+    }
+
+    analyzers : { @table::TrkAna.analyzers
+	TrkAnaTpr : { @table::TrkAna.analyzers.TrkAna 
+	    DownstreameMinusTrack   : "KFFDeP"
+	    UpstreameMinusTrack     : "KFFDeP"
+	    DownstreammuMinusTrack  : "KFFDeP"
+	    TrkCaloDiag             : { @table::TrkAna.analyzers.TrkAna.TrkCaloDiag
+		caloMatchingRoot : "TrackCaloMatchingTpr"
+	    }
+	}  
+
+	TrkAnaCpr : { @table::TrkAna.analyzers.TrkAna
+	    DownstreameMinusTrack   : "CalTrkFitDep"
+	    UpstreameMinusTrack     : "CalTrkFitDep"
+	    DownstreammuMinusTrack  : "CalTrkFitDep"
+	    TrkCaloDiag             : { @table::TrkAna.analyzers.TrkAna.TrkCaloDiag
+		caloMatchingRoot : "TrackCaloMatchingCpr"
+	    }
+	}
+	
+	# TrkAna    : { @table::TrkAna.analyzers.TrkAna
+	#     DownstreameMinusTrack   : "MergePatRecDep"
+	#     UpstreameMinusTrack     : ""
+	#     DownstreammuMinusTrack  : ""
+	#     TrkCaloDiag             : { @table::TrkAna.analyzers.TrkAna.TrkCaloDiag
+	# 	caloMatchingRoot : "TrackCaloMatching"
+	#     }
+	# }
+	
     }
 
     outputs: {
@@ -45,45 +100,78 @@ muminuseplus : {
     }
 }
 
-muminuseplus.gen          : [ generate, g4run, detectorFilter,
-			      @sequence::CommonMC.DigiSim,
-			      @sequence::CaloDigiMC.DigiSim,
-			      @sequence::TrackerMC.DigiSim ]
+muminus_eplus.gen          : [ generate, g4run, detectorFilter,
+			       @sequence::CommonMC.DigiSim,
+			       @sequence::CaloDigiMC.DigiSim,
+			       @sequence::TrackerMC.DigiSim ]
 
-muminuseplus.common_reco  : [ @sequence::CaloReco.Reco, @sequence::CaloCluster.Reco, 
-			      @sequence::TrkHitReco.PrepareHits ]
+muminus_eplus.common_reco  : [ @sequence::CaloReco.Reco, 
+			       @sequence::CaloCluster.Reco, 
+			       @sequence::TrkHitReco.PrepareHits ]
 
-muminuseplus.reco         : [ @sequence::muminuseplus.common_reco,
-			      @sequence::Tracking.TPRDeP,
-			      @sequence::CalPatRec.dep_reco,
-			      MergePatRecDep,
-			      @sequence::TrackCaloMatching.matching_dep ]
+muminus_eplus.reco         : [ @sequence::muminus_eplus.common_reco,
+			       @sequence::Tracking.TPRDeP,
+			       @sequence::CalPatRec.dep_reco,
+			       MergePatRecTprDep,
+			       @sequence::TrackCaloMatching.matching_tpr_dep,
+			       AvikPIDNewTprDep,
+			       MergePatRecCprDep,
+			       @sequence::TrackCaloMatching.matching_cpr_dep,
+			       AvikPIDNewCprDep,
+			       MergePatRecDep,
+			       @sequence::TrackCaloMatching.matching_dep,
+			       AvikPIDNewDep ]
 
-muminuseplus.cpr_reco     : [ @sequence::muminuseplus.common_reco,
-			      @sequence::CalPatRec.dep_reco,
-			      MergePatRecCprDep,
-			      @sequence::TrackCaloMatching.matching_cpr ]
+muminus_eplus.cpr_reco     : [ @sequence::muminus_eplus.common_reco,
+			       @sequence::CalPatRec.dep_reco,
+			       MergePatRecCprDep,
+			       @sequence::TrackCaloMatching.matching_cpr_dep,
+			       AvikPIDNewCprDep ]
 
-muminuseplus.tpr_reco     : [ @sequence::muminuseplus.common_reco,
-			      @sequence::Tracking.TPRDeP,
-			      MergePatRecTprDep,
-			      @sequence::TrackCaloMatching.matching_tpr ]
+muminus_eplus.tpr_reco     : [ @sequence::muminus_eplus.common_reco,
+			       @sequence::Tracking.TPRDeP,
+			       MergePatRecTprDep,
+			       @sequence::TrackCaloMatching.matching_tpr_dep,
+			       AvikPIDNewTprDep ]
+
+# muminus_eplus.cpr_trigger_reco     : [ @sequence::muminus_eplus.common_reco,
+# 				       @sequence::TrkTrigger.Sequences.CPRDePSeedFilterSequence,
+# 				       CalTrkFitDep, MergePatRecCprDep,
+# 				       @sequence::TrackCaloMatching.matching_cpr_dep, 
+# 				       AvikPIDNewCprDep
+# 				      ]
 
 
-muminuseplus.paths : {
 
-    path_gen_digi          : [ @sequence::muminuseplus.gen ]
+muminus_eplus.paths : {
+
+    path_gen_digi          : [ @sequence::muminus_eplus.gen ]
     
-    path_gen_digi_reco     : [ @sequence::muminuseplus.gen,
-			       @sequence::muminuseplus.reco ]
+    path_gen_digi_reco     : [ @sequence::muminus_eplus.gen,
+			       @sequence::muminus_eplus.reco ]
     
-    path_gen_digi_tpr_reco : [ @sequence::muminuseplus.gen,
-			       @sequence::muminuseplus.tpr_reco ]
+    path_reco              : [ @sequence::muminus_eplus.reco ]
     
-    path_gen_digi_cpr_reco : [ @sequence::muminuseplus.gen,
-			       @sequence::muminuseplus.cpr_reco ]
+    path_tpr_reco          : [ @sequence::muminus_eplus.tpr_reco ]
+    
+    path_cpr_reco          : [ @sequence::muminus_eplus.cpr_reco ]
+    
+    path_gen_digi_tpr_reco : [ @sequence::muminus_eplus.gen,
+			       @sequence::muminus_eplus.tpr_reco ]
+    
+    path_gen_digi_cpr_reco : [ @sequence::muminus_eplus.gen,
+			       @sequence::muminus_eplus.cpr_reco ]
+    
     
 
+    #trigger sequences for the calorimeter-seeded track reconstruction algorithm
+    # path_gen_digi_cpr_trigger_reco : [ @sequence::muminus_eplus.gen,
+    # 				       @sequence::muminus_eplus.cpr_trigger_reco
+    # 				      ]
+    
+    # path_trigger_cpr_reco          : [ @sequence::muminus_eplus.cpr_trigger_reco ]
+    
+    
 }
 
 
