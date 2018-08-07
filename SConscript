@@ -54,7 +54,10 @@ muminus_eplus_my_rootcint = Builder(generator     = muminus_eplus_gen_rootcint,
                                     suffix        = '.o',
                                     src_suffix    = '.h')
 
-if (os.path.isdir('Stntuple')): env.Append(BUILDERS = {'MuminusEplusRootCint' : muminus_eplus_my_rootcint})
+stndir=os.environ['MU2E_BASE_RELEASE']+"/Stntuple"
+if (os.path.isdir(stndir)): 
+    env.Append(BUILDERS = {'MuminusEplusRootCint' : muminus_eplus_my_rootcint})
+#env.Append(BUILDERS = {'MuminusEplusRootCint' : muminus_eplus_my_rootcint})
 
 
 class muminus_eplus_helper:

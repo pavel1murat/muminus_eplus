@@ -8,16 +8,16 @@ dir=include
 # 'muminus_eplus' and its subpackages, excluding Stntuple
 #------------------------------------------------------------------------------
 if [ -d $MU2E_BASE_RELEASE/Stntuple ] ; then 
- 
-if [ ! -d ../$dir/muminus_eplus ] ; then mkdir -p ../$dir/muminus_eplus ; fi
-
-for d in ana mod plot; do
-    if [ ! -e ../$dir/muminus_eplus/$d ] ; then 
-	echo `pwd`$0 : creating symbolic link ../$dir/muminus_eplus/$d
-	ln -s ../../muminus_eplus/$d/$d ../$dir/muminus_eplus/$d
-    fi
-done
-
+    
+    if [ ! -d ../$dir/muminus_eplus ] ; then mkdir -p ../$dir/muminus_eplus ; fi
+    
+    for d in ana mod plot; do
+	if [ ! -e ../$dir/muminus_eplus/$d ] ; then 
+	    echo `pwd`$0 : creating symbolic link ../$dir/muminus_eplus/$d
+	    ln -s ../../muminus_eplus/$d/$d ../$dir/muminus_eplus/$d
+	fi
+    done
+    
 fi
 #------------------------------------------------------------------------------
 # muminus_eplus/Stntuple and its subpackages

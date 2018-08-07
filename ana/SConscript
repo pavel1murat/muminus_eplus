@@ -5,7 +5,8 @@
 import os
 Import('env')
 
-if ( os.path.isdir('Stntuple')):
+stndir=os.environ['MU2E_BASE_RELEASE']+"/Stntuple"
+if ( os.path.isdir(stndir)):
 
     Import('muminus_eplus_helper')
 #------------------------------------------------------------------------------
