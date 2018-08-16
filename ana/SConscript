@@ -6,20 +6,21 @@ import os
 Import('env')
 
 stndir=os.environ['MU2E_BASE_RELEASE']+"/Stntuple"
-if ( os.path.isdir(stndir)):
-
-    Import('muminus_eplus_helper')
+if (os.path.isdir(stndir)):
 #------------------------------------------------------------------------------
 # 2016-10-10: STNTUPLE link: add ROOT 'EG' library after 'Physics' library
 #------------------------------------------------------------------------------
-    rootlibs = env['ROOTLIBS']
-    if ( not ("EG" in rootlibs)):
-        rootlibs.insert(rootlibs.index("Physics")+1,"EG");
+  Import('stntuple_helper')
 
-    helper = muminus_eplus_helper();
-
+  rootlibs = env['ROOTLIBS'];
+  if (not ("EG" in rootlibs)):
+    rootlibs.insert(rootlibs.index("Physics")+1,"EG");
+    
+    debug = 0;
+    helper = stntuple_helper(debug);
+  
     helper.handle_dictionaries();
-
+    
     skip_list = []
     libs      = [ 'Stntuple_val', 'Stntuple_alg', 'Stntuple_loop', 'Stntuple_obj', 'Stntuple_geom', 'Stntuple_base',
                   'mu2e_Mu2eUtilities',
@@ -27,8 +28,9 @@ if ( os.path.isdir(stndir)):
                   'cetlib',
                   'xerces-c',
                   rootlibs
-                  ]
-
+                ]
+    
     list_of_cc_files = Glob('*.cc',strings=True);
     helper.build_libs(list_of_cc_files,skip_list,libs);
-# print "tmpdir:"+env['TMP_LIB_DIR']
+
+    # print "tmpdir:"+env['TMP_LIB_DIR']
