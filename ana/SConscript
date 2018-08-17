@@ -4,13 +4,15 @@
 #------------------------------------------------------------------------------
 import os
 Import('env')
-Import('stntuple_helper')
 
 stndir=os.environ['MU2E_BASE_RELEASE']+"/Stntuple"
 if (os.path.isdir(stndir)):
 #------------------------------------------------------------------------------
 # 2016-10-10: STNTUPLE link: add ROOT 'EG' library after 'Physics' library
 #------------------------------------------------------------------------------
+
+    Import('stntuple_helper')
+
 
     rootlibs = env['ROOTLIBS'];
     if (not ("EG" in rootlibs)): rootlibs.insert(rootlibs.index("Physics")+1,"EG");
