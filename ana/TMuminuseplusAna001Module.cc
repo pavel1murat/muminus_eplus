@@ -1134,7 +1134,7 @@ int TMuminuseplusAna001Module::BeginJob() {
   RegisterDataBlock("StrawDataBlock"     ,"TStrawDataBlock"        ,&fStrawDataBlock   );
   RegisterDataBlock("GenpBlock"          ,"TGenpBlock"             ,&fGenpBlock        );
   RegisterDataBlock("SimpBlock"          ,"TSimpBlock"             ,&fSimpBlock        );
-  RegisterDataBlock("VdetBlock"          ,"TVdetDataBlock"         ,&fVdetDataBlock    );
+  RegisterDataBlock("VDetBlock"          ,"TVDetDataBlock"         ,&fVDetDataBlock    );
 
 //-----------------------------------------------------------------------------
 // book histograms
@@ -1546,7 +1546,7 @@ int TMuminuseplusAna001Module::Event(int ientry) {
 
   double                p;
   TStnTrack*            track;
-  TVdetHitData*         vhit;
+  TVDetHitData*         vhit;
   int                   id_word;
   TLorentzVector        mom;
 
@@ -1557,7 +1557,7 @@ int TMuminuseplusAna001Module::Event(int ientry) {
   //  fStrawDataBlock->GetEntry(ientry);
   fGenpBlock->GetEntry(ientry);
   fSimpBlock->GetEntry(ientry);
-  fVdetDataBlock->GetEntry(ientry);
+  fVDetDataBlock->GetEntry(ientry);
 //-----------------------------------------------------------------------------
 // assume electron in the first particle, otherwise the logic will need to 
 // be changed
@@ -1701,7 +1701,7 @@ int TMuminuseplusAna001Module::Event(int ientry) {
   fTrackHelixIndex   = -1;
 
   fNStrawHits   = fStrawDataBlock->NHits();
-  fNVirtualHits = fVdetDataBlock->NHits();
+  fNVirtualHits = fVDetDataBlock->NHits();
     
 
   fNGoodTracks    = 0;
@@ -1713,10 +1713,10 @@ int TMuminuseplusAna001Module::Event(int ientry) {
   VirtualPar_t*   vp;
 
   for (int ivhit=0; ivhit<fNVirtualHits; ivhit++) {
-    vhit           = fVdetDataBlock->Hit(ivhit);
+    vhit           = fVDetDataBlock->Hit(ivhit);
     if (vhit == NULL){
       printf("[filling Virtual det hits] step %i of %i returns NULL pointer. Max limit = %i\n",
-	     ivhit, fNVirtualHits, fVdetDataBlock->NHits());
+	     ivhit, fNVirtualHits, fVDetDataBlock->NHits());
       break;
     }
     vp             = fVirtualPar+ivhit;

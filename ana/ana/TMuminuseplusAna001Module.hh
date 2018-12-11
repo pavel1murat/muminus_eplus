@@ -20,7 +20,7 @@
 #include "Stntuple/obj/TStrawDataBlock.hh"
 #include "Stntuple/obj/TGenpBlock.hh"
 #include "Stntuple/obj/TSimpBlock.hh"
-#include "Stntuple/obj/TVdetDataBlock.hh"
+#include "Stntuple/obj/TVDetDataBlock.hh"
 
 #include "Stntuple/base/TStnArrayI.hh"
 
@@ -376,7 +376,7 @@ public:					// pointers to the data blocks used
   TStrawDataBlock*     fStrawDataBlock;
   TGenpBlock*          fGenpBlock;
   TSimpBlock*          fSimpBlock;
-  TVdetDataBlock*      fVdetDataBlock;
+  TVDetDataBlock*      fVDetDataBlock;
 					// additional track parameters (assume ntracks < 20)
   TrackPar_t        fTrackPar    [200];
   VirtualPar_t      fVirtualPar  [20000];
