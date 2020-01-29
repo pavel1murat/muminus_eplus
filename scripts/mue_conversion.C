@@ -19,19 +19,22 @@ double m_pi0           = 134.9770    ; /* pi0      mass, MeV, PDG */
 double alpha  = 1./137.036;             // alpha_EM
 
 //-----------------------------------------------------------------------------
-// binding energies - from Watanabe et al, 
-// Atomic Data And Nuclear Data Tables 54, 165-178 (1993)
-// Table A
-// also from
-// R.Engfer, H.Schneuwly, J.L.Vuilleumier, H.K.Walter and A.Zehnder
-// ATOMIC DATA AND NUCLEAR DATA TABLES 14, 509-597 (1974)
-// URL  : https://www.sciencedirect.com/science/article/pii/S0092640X74800033
+// binding energies - initially, from
+// Watanabe et al, Atomic Data And Nuclear Data Tables 54, 165-178 (1993) (Table A)
 //
-// and http://amdc.impcas.ac.cn/masstables/Ame2016/mass16.txt
+// and also from
+// R.Engfer, H.Schneuwly, J.L.Vuilleumier, H.K.Walter and A.Zehnder
+// Atomic Data and Nuclear Data Tables 14, 509-597 (1974)
+// URL  : https://www.sciencedirect.com/science/article/pii/S0092640X74800033
+// differences between the two calculations for the same nucleus are < 10 keV
+//
+// atomic masses should be taken from
+// http://amdc.impcas.ac.cn/masstables/Ame2016/mass16.txt
 //-----------------------------------------------------------------------------
 TAtomicData O_16   = {  8 ,  16 ,  -1,  26.98153853 , -0.179 , 0.994};
+TAtomicData Na_27  = { 11 ,  27 ,  -1,  26.99407641 ,  1.e6  , -1.  }; // unstable isotope
+TAtomicData Mg_27  = { 12 ,  27 ,  -1,  26.98434063 ,  1.e6  , -1   }; // unstable isotope
 TAtomicData Al_27  = { 13 ,  27 ,  -1,  26.98153853 , -0.463 , 0.992};
-TAtomicData Na_27  = { 11 ,  27 ,  -1,  26.99407641 ,  1.e6  , -1.  };
 TAtomicData Si_28  = { 14 ,  28 ,  -1,  27.97692653 , -0.535 , 0.991};
 TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.06  , 0.981};
 TAtomicData Ca_48  = { 20 ,  48 ,  -1,  47.95252290 ,  1.e6  , 0.981};
@@ -77,10 +80,10 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
   double mm  = Mother  ->fAtomicMass*xu-m_e*Mother->fZ;	  // mother nucleus mass, MeV 
   double md  = Daughter->fAtomicMass*xu-m_e*Daughter->fZ; // same for the daughter nucleus 
 
-  printf("mm,md = %12.6e %12.5e\n",mm,md);
+  printf("mm,md   = %12.6e %12.5e (MeV)\n",mm,md);
   
   double  dm = md-mm;   /* {^197}Ir is a bit heavier than {^197}Au */
-  printf("dm = %12.6e\n",dm);
+  printf("dm      = %12.6e\n",dm);
 //-----------------------------------------------------------------------------
 // next: calculate muon binding energy
 //-----------------------------------------------------------------------------
@@ -102,7 +105,7 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
     ebind  =  -(m_mu-105.194);
   }
 
-  printf("ebind = %12.6e\n",ebind);
+  printf("ebind   = %12.6e\n",ebind);
 
 //----------------------------------------------------------------------------- 
 //  apparently, a point-like approximation doesn't work well for heavy nuclei,  
@@ -111,7 +114,7 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
   double M  = mm+m_mu+ebind;       // mass of the initial state
 
   double eeplus  = fe(M,m_e,md);    // positron energy for mu- --> e+ conversion
-  printf("eeplus = %12.6e\n",eeplus);
+  printf("eeplus  = %12.6e\n",eeplus);
 
   double peplus  = fp(M,m_e,md); 
   double erecoil = fe(M,md,m_e)-md; // energy of the recoiling doughter nucleus
@@ -154,7 +157,10 @@ void radiative_muon_capture(const TAtomicData* Mother, const TAtomicData* Daught
 
   double M  = mm+m_mu+ebind;       // mass of the initial state
 
-  double eeplus  = fe(M,0,md)-m_e;    // max energy for a e+ (e-) out of RMC 
+  double egamma  = fe(M,0,md);
+  double eeplus  = egamma-m_e;    // max energy for a e+ (e-) out of RMC 
+
+  printf("egamma  = %12.6e\n",egamma);
   printf("eeplus  = %12.6e\n",eeplus);
 
   double erecoil = fe(M,md,0)-md;     // kinetic energy of the recoiling nucleus
