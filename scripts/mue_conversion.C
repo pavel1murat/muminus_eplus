@@ -70,7 +70,11 @@ double fe(double M, double m1, double m2) {
 // momentum of the daughter particle with mass m1 in a decay M --> m1+m2
 //-----------------------------------------------------------------------------
 double fp(double M, double m1, double m2) {
-  return (M*M-m1*m1-m2*m2)/(2.*M);
+  double M2  = M*M;
+  double m12 = m1*m1;
+  double m22 = m2*m2;
+  double dm2 = M2-m12-m22;
+  return sqrt((dm2*dm2-4*m12*m22))/(2.*M);
 }
 
 
