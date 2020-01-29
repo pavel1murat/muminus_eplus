@@ -16,8 +16,13 @@ rmc_closure_approximation::rmc_closure_approximation(double KMax, double Sigma) 
   double pmax    = 100-bin/2;
   
   fPGamma = new TH1F(Form("%s_%s","h_pgamma" ,fName.Data()),"RMC photon   spectrum"         ,nbx,pmin,pmax);
+  fPGamma->GetXaxis()->SetTitle("photon energy, MeV");
+
   fPPos   = new TH1F(Form("%s_%s","h_ppos"   ,fName.Data()),"RMC positron spectrum"         ,nbx,pmin,pmax);
+  fPPos->GetXaxis()->SetTitle("e^{+} momentum, MeV/c");
+
   fPPosS  = new TH1F(Form("%s_%s","h_ppos_s" ,fName.Data()),"RMC positron spectrum, smeared",nbx,pmin,pmax);
+  fPPosS->GetXaxis()->SetTitle("e^{+} momentum, MeV/c");
 
   fRn     = new TRandom3(); 
 

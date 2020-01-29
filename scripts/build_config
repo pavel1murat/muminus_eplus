@@ -5,15 +5,14 @@ dir=include
 # echo pwd  `pwd`
 
 #------------------------------------------------------------------------------
-# 'muminus_eplus' and its subpackages, excluding Stntuple
+# 'muminus_eplus' and its subpackages (assume Stntuple is there)
 #------------------------------------------------------------------------------
 if [ -d $MU2E_BASE_RELEASE/Stntuple ] ; then 
-    
     if [ ! -d ../$dir/muminus_eplus ] ; then mkdir -p ../$dir/muminus_eplus ; fi
     
-    for d in ana ; do
+    for d in ana obj ; do
 	if [ ! -e ../$dir/muminus_eplus/$d ] ; then 
-	    echo `pwd`$0 : creating symbolic link ../$dir/muminus_eplus/$d
+	    echo pwd=`pwd`   $0 : creating symbolic link ../$dir/muminus_eplus/$d
 	    ln -s ../../muminus_eplus/$d/$d ../$dir/muminus_eplus/$d
 	fi
     done
