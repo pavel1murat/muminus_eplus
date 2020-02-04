@@ -271,7 +271,7 @@ void sindrumii_2006::make_fig_08() {
   int    nbins(40);
   double pmin(49.), pmax(54.);
   
-  fFig08 = new TH1F("h_fig_08","Eur Phys J C , Volume 47, Issue 2, pp 337 (2006), Fig 8",nbins,pmin,pmax);
+  fFig08 = new TH1F("h_fig_08","Eur Phys J C, 47, p337 (2006), Fig 8",nbins,pmin,pmax);
 
   for (int i=0; data[2*i] > 0; i++) {
     //    float x = data[2*i  ];

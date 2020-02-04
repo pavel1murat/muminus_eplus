@@ -10,20 +10,19 @@ if (os.path.isdir(stndir)):
 #------------------------------------------------------------------------------
 # 2016-10-10: STNTUPLE link: add ROOT 'EG' library after 'Physics' library
 #------------------------------------------------------------------------------
-    from stntuple_helper import *
-    env.Append(BUILDERS = {'StntupleCodegen'  : stntuple_codegen})
-    env.Append(BUILDERS = {'StntupleRootCint' : stntuple_rootcint})
-
     rootlibs = env['ROOTLIBS'];
     if (not ("EG" in rootlibs)): rootlibs.insert(rootlibs.index("Physics")+1,"EG");
-    
+
+    Import('stntuple_helper')
+
     debug = 0;
     helper = stntuple_helper(env,debug=debug);
     
     helper.handle_dictionaries();
     
     skip_list = []
-    libs      = [ 'Stntuple_val', 'Stntuple_alg', 'Stntuple_loop', 'Stntuple_obj', 'Stntuple_geom', 'Stntuple_base',
+    libs      = [ 'Stntuple_val', 'Stntuple_alg', 'Stntuple_loop',
+                  'Stntuple_obj', 'Stntuple_geom', 'Stntuple_base',
                   'mu2e_Mu2eUtilities',
                   'fhiclcpp',
                   'cetlib',
