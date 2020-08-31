@@ -30,29 +30,35 @@ double alpha  = 1./137.036;             // alpha_EM
 //
 // atomic masses should be taken from
 // http://amdc.impcas.ac.cn/masstables/Ame2016/mass16.txt
+//
+// Huff factors - from Suzuki'93 and Measday'2001 - though not clear where those
+//                folks took them from - no references in respective papers
 //-----------------------------------------------------------------------------
-TAtomicData O_16   = {  8 ,  16 ,  -1,  26.98153853 , -0.179 , 0.994};
+TAtomicData O_16   = {  8 ,  16 ,  -1,  26.98153853 , -0.179 , 0.998};
 TAtomicData Na_27  = { 11 ,  27 ,  -1,  26.99407641 ,  1.e6  , -1.  }; // unstable isotope
 TAtomicData Mg_27  = { 12 ,  27 ,  -1,  26.98434063 ,  1.e6  , -1   }; // unstable isotope
-TAtomicData Al_27  = { 13 ,  27 ,  -1,  26.98153853 , -0.463 , 0.992};
-TAtomicData Si_28  = { 14 ,  28 ,  -1,  27.97692653 , -0.535 , 0.991};
-TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.06  , 0.981};
-TAtomicData Ca_48  = { 20 ,  48 ,  -1,  47.95252290 ,  1.e6  , 0.981};
-TAtomicData Ti_48  = { 22 ,  48 ,  -1,  47.94794093 , -1.264 , -1.  };
-TAtomicData Fe_56  = { 26 ,  56 ,  -1,  55.93493562 , -1.72  , 0.971};
-TAtomicData Zr_90  = { 40 ,  90 ,  -1,  89.90469876 , -3.68  , 0.936};
-TAtomicData Mo_96  = { 42 ,  96 ,  -1,  95.90467477 , -3.95  , 0.932};
-TAtomicData Sn_118 = { 50 , 118 ,  -1, 117.90160661 , -5.19  , 0.914};
+TAtomicData Al_27  = { 13 ,  27 ,  -1,  26.98153853 , -0.463 , 0.993}; // Watanabe: 0.463
+TAtomicData Si_28  = { 14 ,  28 ,  -1,  27.97692653 , -0.538 , 0.992};
+TAtomicData Si_32  = { 14 ,  32 ,  -1,  31.97415153 , -0.538 , -1.  };
+TAtomicData P_31   = { 15 ,  31 ,  -1,  30.97376200 , -0.615 , -1.  };
+TAtomicData S_32   = { 16 ,  32 ,  -1,  31.97207117 , -0.697 , -1.  };
+TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.06  , 0.985};
+TAtomicData Ca_48  = { 20 ,  48 ,  -1,  47.95252290 ,  1.e6  , 0.985};
+TAtomicData Ti_48  = { 22 ,  48 ,  -1,  47.94794093 , -1.264 , 0.981}; // Eng'74: 1.-273
+TAtomicData Fe_56  = { 26 ,  56 ,  -1,  55.93493562 , -1.72  , 0.975};
+TAtomicData Zr_90  = { 40 ,  90 ,  -1,  89.90469876 , -3.68  , 0.940};
+TAtomicData Mo_96  = { 42 ,  96 ,  -1,  95.90467477 , -3.95  , 0.936};
+TAtomicData Sn_118 = { 50 , 118 ,  -1, 117.90160661 , -5.19  , 0.918};
 TAtomicData Ir_197 = { 77 , 197 ,  -1, 196.96965723 ,  1.e6  , -1   };
 TAtomicData Pt_197 = { 78 , 197 ,  -1, 196.96734305 ,  1.e6  , -1.  }; //
-TAtomicData Au_197 = { 79 , 197 ,  -1, 196.96657011 , -10.08 , -1.  }; // value used by SINDRUM-II
+TAtomicData Au_197 = { 79 , 197 ,  -1, 196.96657011 , -10.08 , 0.850}; // used by SINDRUM-II; Eng'74: -10.081
 TAtomicData Th_206 = { 81 , 206 ,  -1, 205.97611003 ,  1.e6  , -1   };
 TAtomicData Th_207 = { 81 , 207 ,  -1, 206.97741857 ,  1.e6  , -1   };
 TAtomicData Th_208 = { 81 , 208 ,  -1, 208.01791072 ,  1.e6  , -1   };
 TAtomicData Pb_206 = { 82 , 206 ,  -1, 205.97446512 , -10.5  , -1   };
 TAtomicData Pb_207 = { 82 , 207 ,  -1, 206.97589674 , -10.5  , -1   };
-TAtomicData Pb_208 = { 82 , 208 ,  -1, 207.97665192 , -10.5  , 0.847};
-TAtomicData Bi_209 = { 83 , 209 ,  -1, 208.98039852 , -10.7  , 0.845};
+TAtomicData Pb_208 = { 82 , 208 ,  -1, 207.97665192 , -10.5  , 0.844}; // Wat'93: -10.5; Eng'74: -10.59
+TAtomicData Bi_209 = { 83 , 209 ,  -1, 208.98039852 , -10.7  , 0.840}; // Wat'93: -10.7
 
 double mH              = 1.007825;     // Hydrogen atom mass mass in atomic units
 double mp_u            = 1.007276467;  // proton mass, atomic units, not used
@@ -78,6 +84,8 @@ double fp(double M, double m1, double m2) {
 }
 
 
+//-----------------------------------------------------------------------------
+// works for both channels, need to properly specify the daughter nucleus
 //-----------------------------------------------------------------------------
 void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
   
@@ -117,8 +125,8 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
 //-----------------------------------------------------------------------------
   double M  = mm+m_mu+ebind;       // mass of the initial state
 
-  double eeplus  = fe(M,m_e,md);    // positron energy for mu- --> e+ conversion
-  printf("eeplus  = %12.6e\n",eeplus);
+  double ee   = fe(M,m_e,md);    // positron energy for mu- --> e+ conversion
+  printf("ee      = %12.6e\n",ee);
 
   double peplus  = fp(M,m_e,md); 
   double erecoil = fe(M,md,m_e)-md; // energy of the recoiling doughter nucleus
@@ -137,35 +145,32 @@ void radiative_muon_capture(const TAtomicData* Mother, const TAtomicData* Daught
   double  dm = md-mm;
   printf("md-mm   = %12.6e\n",dm);
 //-----------------------------------------------------------------------------
-// next: calculate muon binding energy
+// next: calculate muon binding energy, use reduced mass
 //-----------------------------------------------------------------------------
-//  double ebind  = (zAu*alpha)^2*m/2;              // naive calculation
-
-					// a better way: use reduced mass
-
   double ebind  = -Mother->fZ*alpha*Mother->fZ*alpha*m_mu/(1+m_mu/mm)/2 ; 
 //-----------------------------------------------------------------------------
 // for heavy nuclei, the binding energy is very different from that calculated
-// assuming point-like nucleus
-// if we have a calculation, use that
+// assuming a point-like nucleus
+// if a theoretical calculation is avaiable, use that
+// binding energy is supposed to be negative
 //-----------------------------------------------------------------------------
   if (Mother->fEBind < 0) ebind = Mother->fEBind;
 
-
-  // for Al-27, from Czarnecki et al:
+  // exception for Al-27: use binding energy calculation from Czarnecki et al:
+  // the older calculated value is -0.463, this one - -0.4644, 1.4 keV away
   if ((Mother->fZ == 13) && (Mother->fA == 27)) {
     ebind  =  -(m_mu-105.194);
   }
 
   printf("ebind   = %12.6e\n",ebind);
 
-  double M  = mm+m_mu+ebind;       // mass of the initial state
+  double M       = mm+m_mu+ebind;       // mass of the initial state
 
   double egamma  = fe(M,0,md);
-  double eeplus  = egamma-m_e;    // max energy for a e+ (e-) out of RMC 
+  double ee      = egamma-m_e;    // max energy for a e+ (e-) out of RMC 
 
   printf("egamma  = %12.6e\n",egamma);
-  printf("eeplus  = %12.6e\n",eeplus);
+  printf("ee      = %12.6e\n",ee);
 
   double erecoil = fe(M,md,0)-md;     // kinetic energy of the recoiling nucleus
   printf("erecoil = %12.6e\n",erecoil);
