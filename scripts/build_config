@@ -1,32 +1,20 @@
 #!/bin/bash
-
-dir=include
-
-echo building muminus_eplus, pwd  `pwd`
-
 #------------------------------------------------------------------------------
-# 'muminus_eplus' and its subpackages (assume Stntuple is there)
+# 'muminus_eplus' and its subpackages (assume Stntuple is around)
 #------------------------------------------------------------------------------
-#if [ -d $MU2E_BASE_RELEASE/Stntuple ] ; then 
-if [ ! -d ../$dir/muminus_eplus ] ; then mkdir -p ../$dir/muminus_eplus ; fi
-    
+pkg=muminus_eplus
+
+base=$MU2E_SATELLITE_RELEASE
+if [ ".$base" == "." ] ; then 
+   base=$MU2E_BASE_RELEASE
+fi
+
+# echo building $pkg, pwd  `pwd`
+if [ ! -d $base/include/$pkg ] ; then mkdir -p $base/include/$pkg ; fi
+
 for d in ana obj ; do
-    if [ ! -e ../$dir/muminus_eplus/$d ] ; then 
-	echo pwd=`pwd`   $0 : creating symbolic link ../$dir/muminus_eplus/$d
-	ln -s ../../muminus_eplus/$d/$d ../$dir/muminus_eplus/$d
+    if [ ! -e $base/include/$pkg/$d ] ; then 
+	echo `pwd`/$0 : creating symbolic link $base/include/$pkg/$d
+	ln -s ../../$pkg/$d/$d $base/include/$pkg/$d
     fi
 done
-    
-#fi
-#------------------------------------------------------------------------------
-# muminus_eplus/Stntuple and its subpackages
-#------------------------------------------------------------------------------
-# if [ ! -d ../$dir/Stntuple ] ; then mkdir -p ../$dir/Stntuple ; fi
-# 
-# # for d in alg base gui loop mod obj val ; do
-# for d in alg base loop mod obj val ; do
-#     if [ ! -e ../$dir/Stntuple/$d ] ; then 
-# 	echo `pwd`$0 : creating symbolic link ../$dir/Stntuple/$d
-# 	ln -s ../../muminus_eplus/Stntuple/$d/$d ../$dir/Stntuple/$d
-#     fi
-# done

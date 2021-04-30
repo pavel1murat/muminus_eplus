@@ -34,9 +34,14 @@ double alpha  = 1./137.036;             // alpha_EM
 // Huff factors - from Suzuki'93 and Measday'2001 - though not clear where those
 //                folks took them from - no references in respective papers
 //-----------------------------------------------------------------------------
+TAtomicData Neut   = {  0 ,   1 ,  -1,   1.0086650  ,  0.0   , -1.  };
+TAtomicData H_1    = {  1 ,   1 ,  -1,   1.007825   ,  1.e6  , -1.  };
 TAtomicData O_16   = {  8 ,  16 ,  -1,  26.98153853 , -0.179 , 0.998};
-TAtomicData Na_27  = { 11 ,  27 ,  -1,  26.99407641 ,  1.e6  , -1.  }; // unstable isotope
-TAtomicData Mg_27  = { 12 ,  27 ,  -1,  26.98434063 ,  1.e6  , -1   }; // unstable isotope
+TAtomicData Ne_24  = { 10 ,  24 ,  -1,  23.99361065 , -0.277 , -1.  }; // unstable
+TAtomicData Na_24  = { 11 ,  24 ,  -1,  23.99096301 , -0.335 , -1.  }; // unstable isotope , beta --> Mg_24
+TAtomicData Na_27  = { 11 ,  27 ,  -1,  26.99407641 , -0.335 , -1.  }; // unstable isotope
+TAtomicData Mg_24  = { 12 ,  24 ,  -1,  23.98504170 , -0.398 , -1   }; // stable isotope
+TAtomicData Mg_27  = { 12 ,  27 ,  -1,  26.98434063 , -0.398 , -1   }; // unstable isotope
 TAtomicData Al_27  = { 13 ,  27 ,  -1,  26.98153853 , -0.463 , 0.993}; // Watanabe: 0.463
 TAtomicData Si_28  = { 14 ,  28 ,  -1,  27.97692653 , -0.538 , 0.992};
 TAtomicData Si_32  = { 14 ,  32 ,  -1,  31.97415153 , -0.538 , -1.  };
@@ -46,6 +51,11 @@ TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.06  , 0.985};
 TAtomicData Ca_48  = { 20 ,  48 ,  -1,  47.95252290 ,  1.e6  , 0.985};
 TAtomicData Ti_48  = { 22 ,  48 ,  -1,  47.94794093 , -1.264 , 0.981}; // Eng'74: 1.-273
 TAtomicData Fe_56  = { 26 ,  56 ,  -1,  55.93493562 , -1.72  , 0.975};
+TAtomicData Co_59  = { 27 ,  59 ,  -1,  58.93319365 , -1.858 , -1.  };
+TAtomicData Co_60  = { 27 ,  60 ,  -1,  59.93381567 , -1.858 , -1.  };
+TAtomicData Ni_58  = { 28 ,  58 ,  -1,  57.93534178 , -1.981 , -1.  };
+TAtomicData Ni_60  = { 28 ,  60 ,  -1,  59.93078526 , -1.983 , -1.  }; // Eng'74
+TAtomicData Ni_62  = { 28 ,  62 ,  -1,  61.92834487 , -1.983 , -1.  };
 TAtomicData Zr_90  = { 40 ,  90 ,  -1,  89.90469876 , -3.68  , 0.940};
 TAtomicData Mo_96  = { 42 ,  96 ,  -1,  95.90467477 , -3.95  , 0.936};
 TAtomicData Sn_118 = { 50 , 118 ,  -1, 117.90160661 , -5.19  , 0.918};
@@ -64,6 +74,8 @@ double mH              = 1.007825;     // Hydrogen atom mass mass in atomic unit
 double mp_u            = 1.007276467;  // proton mass, atomic units, not used
 double xu              = 931.4940954 ; // atomic mass unit , MeV, from PDG
 double x               = m_p/mp_u;
+double mProt           = 938.272046  ; // proton   mass, MeV, PDG
+double mNeut           = 939.5654133 ; // neutron  mass, MeV, PDG
 
 //-----------------------------------------------------------------------------
 // energy of the daughter particle with mass m1 in a decay M --> m1+m2
