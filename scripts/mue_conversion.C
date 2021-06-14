@@ -47,7 +47,8 @@ TAtomicData Si_28  = { 14 ,  28 ,  -1,  27.97692653 , -0.538 , 0.992};
 TAtomicData Si_32  = { 14 ,  32 ,  -1,  31.97415153 , -0.538 , -1.  };
 TAtomicData P_31   = { 15 ,  31 ,  -1,  30.97376200 , -0.615 , -1.  };
 TAtomicData S_32   = { 16 ,  32 ,  -1,  31.97207117 , -0.697 , -1.  };
-TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.06  , 0.985};
+TAtomicData K_40   = { 19 ,  40 ,  -1,  39.96399817 , 1.e6   , -1   };
+TAtomicData Ca_40  = { 20 ,  40 ,  -1,  39.96259086 , -1.066 , 0.985};
 TAtomicData Ca_48  = { 20 ,  48 ,  -1,  47.95252290 ,  1.e6  , 0.985};
 TAtomicData Sc_48  = { 21 ,  48 ,  -1,  47.95222316 ,  1.e6  , -1.  }; 
 TAtomicData Ti_48  = { 22 ,  48 ,  -1,  47.94794093 , -1.264 , 0.981}; // Eng'74: 1.-273
@@ -74,7 +75,7 @@ TAtomicData Bi_209 = { 83 , 209 ,  -1, 208.98039852 , -10.7  , 0.840}; // Wat'93
 double mH              = 1.007825;     // Hydrogen atom mass mass in atomic units
 double mp_u            = 1.007276467;  // proton mass, atomic units, not used
 double xu              = 931.4940954 ; // atomic mass unit , MeV, from PDG
-double x               = m_p/mp_u;
+// double x               = m_p/mp_u;
 double mProt           = 938.272046  ; // proton   mass, MeV, PDG
 double mNeut           = 939.5654133 ; // neutron  mass, MeV, PDG
 
@@ -115,7 +116,6 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
 //  double ebind  = (zAu*alpha)^2*m/2;              // naive calculation
 
 					// a better way: use reduced mass
-  
 
   double ebind  = -Mother->fZ*alpha*Mother->fZ*alpha*m_mu/(1+m_mu/mm)/2 ; 
 //-----------------------------------------------------------------------------
