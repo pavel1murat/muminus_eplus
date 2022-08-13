@@ -136,14 +136,14 @@ void mue_conversion(const TAtomicData* Mother, const TAtomicData* Daughter) {
 //  apparently, a point-like approximation doesn't work well for heavy nuclei,  
 //  use fixed value of binding energy
 //-----------------------------------------------------------------------------
-  double M  = mm+m_mu+ebind;       // mass of the initial state
+  double M       = mm+m_mu+ebind;       // mass of the initial state
 
-  double ee   = fe(M,m_e,md);    // positron energy for mu- --> e+ conversion
-  printf("ee      = %12.6e\n",ee);
+  double ee      = fe(M,m_e,md);        // e-/e+ energy for mu- --> e conversion
+  double pe      = fp(M,m_e,md); 
+  double erecoil = fe(M,md,m_e)-md;     // energy of the recoiling daughter nucleus
 
-  double peplus  = fp(M,m_e,md); 
-  double erecoil = fe(M,md,m_e)-md; // energy of the recoiling doughter nucleus
   printf("erecoil = %12.6e\n",erecoil);
+  printf("ee      = %12.6e\n",ee);
 
 }
 
