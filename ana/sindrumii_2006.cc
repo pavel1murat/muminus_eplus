@@ -5,14 +5,24 @@
 
 //-----------------------------------------------------------------------------
 sindrumii_2006::sindrumii_2006() {
-  make_ce_spectrum();
-  make_electron_spectrum();
-  make_positron_spectrum();
-  make_fig_08();
+  fPPos   = nullptr;
+  fCE     = nullptr;
+  fCP     = nullptr;
+  fPEle   = nullptr;
+  fPEleMC = nullptr;
+  fFig08  = nullptr;
+  
+  make_ce_spectrum      (fCE);
+  make_electron_spectrum(fPEle);
+  make_mc_ele_spectrum  (fPEleMC);
+  make_positron_spectrum(fPPos);
+  make_fig_08           (fFig08);
 }
 
 //-----------------------------------------------------------------------------
-void sindrumii_2006::make_ce_spectrum() {
+// CE jacobian from the SINDRUM-II 2006 paper
+//-----------------------------------------------------------------------------
+void sindrumii_2006::make_ce_spectrum(TH1F*& Hist) {
 
   float data[] = {
 		  83.5,0.258804,
@@ -51,7 +61,8 @@ void sindrumii_2006::make_ce_spectrum() {
 
   double bin = (pmax-pmin)/nbx;
 
-  fCE = new TH1F("h_ce","SINDRUM-II CE signal Au (2006)",nbx,pmin-bin/2,pmax-bin/2);
+  if (Hist) delete Hist;
+  Hist = new TH1F("h_ce","SINDRUM-II CE signal Au (2006)",nbx,pmin-bin/2,pmax-bin/2);
 
   for (int i=0; data[2*i] > 0; i++) {
     float x = data[2*i  ];
@@ -61,20 +72,21 @@ void sindrumii_2006::make_ce_spectrum() {
 
     //    printf("CE: i, x, y, ib : %3i %10.3f %10.3f %3i \n",i,x,y,ib);
 
-    fCE->SetBinContent(ib,y);
+    Hist->SetBinContent(ib,y);
   }
 
-  fCE->SetName("sindrum_ii_ce_au_2006");
-  fCE->SetTitle("SINDRUM-II CE signal on Au (2006)");
+  Hist->SetName("sindrum_ii_ce_au_2006");
+  Hist->SetTitle("SINDRUM-II CE signal on Au (2006)");
   // fCE->SetMarkerStyle(20);
   // fCE->SetMarkerSize (1.5);
-  fCE->SetMarkerColor(kBlue+2);
-  fCE->SetLineColor  (kBlue+2);
-
+  Hist->SetMarkerColor(kBlue+2);
+  Hist->SetLineColor  (kBlue+2);
 //-----------------------------------------------------------------------------
-// CE peaks at 95.6 MeV, CP - at 91.7 MeV
-// forget 0.1 MeV, shift by 8 bins
+// on Au, CE peaks at 95.6 MeV, CP - at 91.7 MeV
+// forget 0.1 MeV and shift by 8 bins
 //-----------------------------------------------------------------------------
+  if (fCP) delete fCP;
+  
   fCP = new TH1F("h_cp","SINDRUM-II mu- --> e+ signal Au (2006), approx",nbx,pmin-bin/2,pmax-bin/2);
 
   for (int i=0; data[2*i] > 0; i++) {
@@ -96,7 +108,8 @@ void sindrumii_2006::make_ce_spectrum() {
   fCP->SetLineColor  (kBlue+2);
 }
 
-void sindrumii_2006::make_positron_spectrum() {
+//-----------------------------------------------------------------------------
+void sindrumii_2006::make_positron_spectrum(TH1F*& Hist) {
 
   float data[] = {
 		  77.0, 60.,
@@ -137,7 +150,8 @@ void sindrumii_2006::make_positron_spectrum() {
 
   double bin = (pmax-pmin)/nbx;
 
-  fPPos = new TH1F("h_pos","SINDRUM-II positrons Au (2006)",nbx,pmin-bin/2,pmax-bin/2);
+  if (Hist) delete Hist;
+  Hist = new TH1F("h_pos","SINDRUM-II positrons Au (2006)",nbx,pmin-bin/2,pmax-bin/2);
 
   for (int i=0; data[2*i] > 0; i++) {
     float x = data[2*i  ];
@@ -145,20 +159,18 @@ void sindrumii_2006::make_positron_spectrum() {
 
     int bin = (x-pmin+0.1)/0.5 + 1;
 
-    fPPos->SetBinContent(bin,y);
-    fPPos->SetBinError  (bin,sqrt(y));
+    Hist->SetBinContent(bin,y);
+    Hist->SetBinError  (bin,sqrt(y));
   }
 
-  fPPos->SetMarkerStyle(20);
-  fPPos->SetMarkerSize (1.5);
-  fPPos->SetMarkerColor(kRed+2);
-  fPPos->SetLineColor  (kRed+2);
-  
-  //  fPPos->Draw();
+  Hist->SetMarkerStyle(20);
+  Hist->SetMarkerSize (1.5);
+  Hist->SetMarkerColor(kRed+2);
+  Hist->SetLineColor  (kRed+2);
 }
 
 //-----------------------------------------------------------------------------
-void sindrumii_2006::make_electron_spectrum() {
+void sindrumii_2006::make_electron_spectrum(TH1F*& Hist) {
 
   float data[] = {
 		  77.0, 4848.0,
@@ -198,8 +210,9 @@ void sindrumii_2006::make_electron_spectrum() {
   double pmin(75.), pmax(100.);
 
   double bin = (pmax-pmin)/nbx;
-  
-  fPEle = new TH1F("h_ele","SINDRUM-II electrons Au (2006)",50,pmin-bin/2,pmax-bin/2);
+
+  if (Hist) delete Hist;
+  Hist = new TH1F("h_ele","SINDRUM-II electrons Au (2006)",50,pmin-bin/2,pmax-bin/2);
 
   for (int i=0; data[2*i] > 0; i++) {
     float x = data[2*i  ];
@@ -207,23 +220,85 @@ void sindrumii_2006::make_electron_spectrum() {
 
     int bin = (x-pmin+0.1)/0.5 + 1;
 
-    fPEle->SetBinContent(bin,y);
-    fPEle->SetBinError  (bin,sqrt(y));
+    Hist->SetBinContent(bin,y);
+    Hist->SetBinError  (bin,sqrt(y));
   }
 
-  fPEle->SetMarkerStyle(20);
-  fPEle->SetMarkerSize (1.5);
-  fPEle->SetMarkerColor(kBlue+2);
-  fPEle->SetLineColor  (kBlue+2);
+  Hist->SetMarkerStyle(20);
+  Hist->SetMarkerSize (1.5);
+  Hist->SetMarkerColor(kBlue+2);
+  Hist->SetLineColor  (kBlue+2);
 
   //  fPEle->Draw();
+}
+
+//-----------------------------------------------------------------------------
+// digitized SINDRUM-II MC description of the electrion spectrum
+//-----------------------------------------------------------------------------
+void sindrumii_2006::make_mc_ele_spectrum(TH1F*& Hist) {
+
+  float data[] = {
+    77.0,4851.53,
+    77.5,4450.56,
+    78.0,4028.91,
+    78.5,3481.66,
+    79.0,2872.19,
+    79.5,2369.41,
+    80.0,1941.71,
+    80.5,1580.69,
+    81.0,1253.09,
+    81.5,1006.66,
+    82.0,808.688,
+    82.5,624.294,
+    83.0,481.945,
+    83.5,364.720,
+    84.0,277.846,
+    84.5,200.721,
+    85.0,145.005,
+    85.5,104.062,
+    86.0,74.1852,
+    86.5,52.8863,
+    87.0,33.9047,
+    87.5,23.6941,
+    88.0,15.8069,
+    88.5,11.4192,
+    89.0,6.80539,
+    89.5,3.48166,
+    90.0,2.94945,
+    90.5,1.38424,
+    91.0,1.55985,
+    91.5,0.554008,
+    -1
+  };
+
+  int    nbx(50);
+  double pmin(75.), pmax(100.);
+
+  double bin = (pmax-pmin)/nbx;
+
+  if (Hist) delete Hist;
+  Hist = new TH1F("h_mc_ele","SINDRUM-II MC electrons, Au (2006)",50,pmin-bin/2,pmax-bin/2);
+
+  for (int i=0; data[2*i] > 0; i++) {
+    float x = data[2*i  ];
+    float y = data[2*i+1];
+
+    int bin = (x-pmin+0.1)/0.5 + 1;
+
+    Hist->SetBinContent(bin,y);
+    Hist->SetBinError  (bin,sqrt(y));
+  }
+
+  Hist->SetLineColor  (kBlue+2);
+  Hist->SetFillColor  (kBlue+2);
+  Hist->SetFillStyle  (3004);
 }
 
 
 //-----------------------------------------------------------------------------
 // here the step between the points seems to be 0.125 MeV, just make 40 bins
 //-----------------------------------------------------------------------------
-void sindrumii_2006::make_fig_08() {
+void sindrumii_2006::make_fig_08(TH1F*& Hist) {
 
   float data[] = {
     49.0666,620.569,
@@ -270,8 +345,9 @@ void sindrumii_2006::make_fig_08() {
 
   int    nbins(40);
   double pmin(49.), pmax(54.);
-  
-  fFig08 = new TH1F("h_fig_08","Eur Phys J C, 47, p337 (2006), Fig 8",nbins,pmin,pmax);
+
+  if (Hist) delete Hist;
+  Hist = new TH1F("h_fig_08","Eur Phys J C, 47, p337 (2006), Fig 8",nbins,pmin,pmax);
 
   for (int i=0; data[2*i] > 0; i++) {
     //    float x = data[2*i  ];
@@ -279,16 +355,14 @@ void sindrumii_2006::make_fig_08() {
 
     int bin = i+1;
 
-    fFig08->SetBinContent(bin,y);
-    fFig08->SetBinError  (bin,sqrt(y));
+    Hist->SetBinContent(bin,y);
+    Hist->SetBinError  (bin,sqrt(y));
   }
 
-  fFig08->SetMarkerStyle(20);
-  fFig08->SetMarkerSize (1.);
-  fFig08->SetMarkerColor(kBlue+2);
-  fFig08->SetLineColor  (kBlue+2);
-  fFig08->SetStats(0);
-  fFig08->GetXaxis()->SetTitle("positron momentum, MeV/c");
-
-  //  fFig08->Draw();
+  Hist->SetMarkerStyle(20);
+  Hist->SetMarkerSize (1.);
+  Hist->SetMarkerColor(kBlue+2);
+  Hist->SetLineColor  (kBlue+2);
+  Hist->SetStats(0);
+  Hist->GetXaxis()->SetTitle("positron momentum, MeV/c");
 }

@@ -47,6 +47,10 @@ double rmc_closure_approximation::SplittingFraction(int j) {
 }
 
 //-----------------------------------------------------------------------------
+// generate RMC photon spectrum (fPGamma), RMC positron spectrum (fPPos) and
+// RMC positron spectrum smeared with the resolution 'Sigma'
+// normalize all spectra to unity
+//-----------------------------------------------------------------------------
 void rmc_closure_approximation::init_spectra(double KMax, double Sigma) {
   int    ni(100000), nj(1000);
 
@@ -83,6 +87,6 @@ void rmc_closure_approximation::init_spectra(double KMax, double Sigma) {
 // normalize spectra to unity
 //-----------------------------------------------------------------------------
   fPGamma->Scale(1./fPGamma->Integral());
-  fPPos->Scale(1./fPPos->Integral());
-  fPPosS->Scale(1./fPPosS->Integral());
+  fPPos  ->Scale(1./fPPos->Integral());
+  fPPosS ->Scale(1./fPPosS->Integral());
 }

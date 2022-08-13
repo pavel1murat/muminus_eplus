@@ -2,27 +2,25 @@
 #
 # Script to build the files found in this directory.
 #------------------------------------------------------------------------------
-import os
-Import('env')
+import os,copy
+Import('muminus_eplus_env')
+Import('stntuple_helper')
 
-stndir=os.environ['MU2E_BASE_RELEASE']+"/Stntuple"
-if (os.path.isdir(stndir)):
-#------------------------------------------------------------------------------
-# 2016-10-10: STNTUPLE link: add ROOT 'EG' library after 'Physics' library
-#------------------------------------------------------------------------------
-    rootlibs = env['ROOTLIBS'];
-    if (not ("EG" in rootlibs)): rootlibs.insert(rootlibs.index("Physics")+1,"EG");
-
-    Import('stntuple_helper')
+def local_build():
+    local_env = muminus_eplus_env.Clone();
+    rootlibs  = local_env['ROOTLIBS'];
 
     debug = 0;
-    helper = stntuple_helper(env,debug=debug);
-    
+    helper = stntuple_helper(local_env,debug=debug);
+
     helper.handle_dictionaries();
     
     skip_list = []
-    libs      = [ 'Stntuple_val', 'Stntuple_alg', 'Stntuple_loop',
-                  'Stntuple_obj', 'Stntuple_geom', 'Stntuple_base',
+    
+    stntuple_libs = [ 'Stntuple_val', 'Stntuple_alg', 'Stntuple_loop',
+                      'Stntuple_obj', 'Stntuple_geom', 'Stntuple_base'
+                  ];
+    libs      = stntuple_libs + [
                   'mu2e_Mu2eUtilities',
                   'fhiclcpp',
                   'cetlib',
@@ -32,5 +30,7 @@ if (os.path.isdir(stndir)):
     
     list_of_cc_files = Glob('*.cc',strings=True);
     helper.build_libs(list_of_cc_files,skip_list,libs);
-    
-    # print "tmpdir:"+env['TMP_LIB_DIR']
+
+#-------------------------------------------------------- END
+local_build()
+# print "tmpdir:"+env['TMP_LIB_DIR']
