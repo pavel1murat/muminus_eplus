@@ -958,11 +958,11 @@ void TMuminuseplusAna001Module::FillEventHistograms(EventHist_t* Hist) {
     dt = t0_cls-t0_trk;
   }
 
-  TStrawHitData*  sh;
+  TStrawHit*  sh;
   int n_good_hits = 0;
   for (int i=0; i<fNStrawHits; i++ ) {
-    sh  = fStrawDataBlock->Hit(i);
-    Hist->fSHTime->Fill(sh->Time());
+    sh  = fStrawHitBlock->Hit(i);
+    Hist->fSHTime->Fill(sh->Time(0));
 
     if (fabs(dt+15.)< 50) n_good_hits += 1;
   }
@@ -1131,7 +1131,7 @@ int TMuminuseplusAna001Module::BeginJob() {
   RegisterDataBlock("TrackSeedBlockTpr"  ,"TStnTrackSeedBlock"     ,&fTprTrackSeedBlock);
   RegisterDataBlock("HelixBlockTpr"      ,"TStnHelixBlock"         ,&fTprHelixBlock    );
   RegisterDataBlock("TrackBlock"         ,"TStnTrackBlock"         ,&fTprTrackBlock    );
-  RegisterDataBlock("StrawDataBlock"     ,"TStrawDataBlock"        ,&fStrawDataBlock   );
+  RegisterDataBlock("StrawHitBlock"      ,"TStrawHitBlock"         ,&fStrawHitBlock    );
   RegisterDataBlock("GenpBlock"          ,"TGenpBlock"             ,&fGenpBlock        );
   RegisterDataBlock("SimpBlock"          ,"TSimpBlock"             ,&fSimpBlock        );
   RegisterDataBlock("VDetBlock"          ,"TVDetDataBlock"         ,&fVDetDataBlock    );
@@ -1700,7 +1700,7 @@ int TMuminuseplusAna001Module::Event(int ientry) {
   fTrackTrkSeedIndex = -1;
   fTrackHelixIndex   = -1;
 
-  fNStrawHits   = fStrawDataBlock->NHits();
+  fNStrawHits   = fStrawHitBlock->NHits();
   fNVirtualHits = fVDetDataBlock->NHits();
     
 

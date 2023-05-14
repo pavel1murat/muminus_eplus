@@ -1,0 +1,32 @@
+#!/bin/bash
+# echo pwd  `pwd`
+#------------------------------------------------------------------------------
+# make sure Stntuple build_config is executed
+#------------------------------------------------------------------------------
+base=$MUSE_WORK_DIR
+
+pkg=`echo $0 | awk -F / '{print $(NF-2)}'`
+
+# echo $pkg::build_config_muse:000: MU2E_VERBOSE:.$MU2E_VERBOSE.
+# echo $pkg::build_congig_muse:001: pwd=`pwd`
+
+cd $MUSE_WORK_DIR ; Stntuple/scripts/build_config_muse $pkg ; cd ~- ;
+#------------------------------------------------------------------------------
+# 'muminus_eplus' and its subpackages, excluding Stntuple
+#------------------------------------------------------------------------------
+# echo "$pkg::build_congig_muse:002: pwd="`pwd`   pkg=$pkg MUSE_WORK_DIR=$MUSE_WORK_DIR
+
+pkg_include_dir=$base/include/$pkg
+
+if [ ! -d $pkg_include_dir ] ; then
+    echo pkg::build_config_muse: pwd=$pwd ; creating $base/include/$pkg
+    mkdir -p $pkg_include_dir
+fi
+
+for d in ana obj ; do
+    if [ ! -e $pkg_include_dir/$d ] ; then 
+	cmd="ln -s ../../$pkg/$d/$d $pkg_include_dir/$d"
+	echo `pwd`$0 : executing: $cmd
+	$cmd
+    fi
+done

@@ -2,19 +2,23 @@
 #------------------------------------------------------------------------------
 # 'muminus_eplus' and its subpackages (assume Stntuple is around)
 #------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# make sure Stntuple build_config is executed
+#------------------------------------------------------------------------------
+pushd ../Stntuple ; scripts/build_config ; popd ;
+
 pkg=muminus_eplus
 
-base=$MU2E_SATELLITE_RELEASE
-if [ ".$base" == "." ] ; then 
-   base=$MU2E_BASE_RELEASE
-fi
+base=$MUSE_WORK_DIR/build
+    dir=$base/include
+pkg_dir=$MUSE_WORK_DIR/$pkg
 
 # echo building $pkg, pwd  `pwd`
 if [ ! -d $base/include/$pkg ] ; then mkdir -p $base/include/$pkg ; fi
 
 for d in ana obj ; do
-    if [ ! -e $base/include/$pkg/$d ] ; then 
-	echo `pwd`/$0 : creating symbolic link $base/include/$pkg/$d
-	ln -s ../../$pkg/$d/$d $base/include/$pkg/$d
+    if [ ! -e $dir/$pkg/$d ] ; then 
+	echo `pwd`/$0 : creating symbolic link $dir/$pkg/$d
+	ln -s $pkg_dir/$d/$d $dir/$pkg/$d
     fi
 done
