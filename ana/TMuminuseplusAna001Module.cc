@@ -701,7 +701,7 @@ void TMuminuseplusAna001Module::FillEventHistograms(EventHist_t* Hist) {
   //fill info about the track candiadtes
   //  TStnTrackSeed*  trkSeed(0);
   TStnHelix*      helix(0);
-  int  nCuts(11);
+  int  const nCuts(11);
   int  nhits_cut       [nCuts] = {0};
   int  triggerCounter  [nCuts] = {0};
   int  triggerCounter1 [nCuts] = {0};
@@ -718,7 +718,7 @@ void TMuminuseplusAna001Module::FillEventHistograms(EventHist_t* Hist) {
 
   for (int i=0; i<nCuts; ++i){ nhits_cut[i] = 10 + i; }
 
-  int  nCuts2(8);
+  int  const nCuts2(8);
   int  triggerCounter7[nCuts2] = {0};
   int  triggerCounter13[nCuts] = {0};
   int  triggerCounter14[nCuts] = {0};
